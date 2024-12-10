@@ -38,5 +38,9 @@ extra-output-files = [
 ]
 
 [rpc_endpoints]
-testnet = "${TESTNET_RPC_URL}"
-mainnet = "${MAINNET_RPC_URL}"
+mainnet = "https://rpc.nerochain.io"
+testnet = "https://rpc-testnet.nerochain.io"
+
+[etherscan]
+nero = { key = "${ETHERSCAN_KEY}", chain = "1689", url = "https://api.neroscan.io/api" }
+neroTest = { key = "${ETHERSCAN_KEY}", chain = "689", url = "https://api-testnet.neroscan.io/api"}
