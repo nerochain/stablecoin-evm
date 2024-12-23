@@ -48,6 +48,8 @@ contract DeployFiatToken is Script, DeployImpl {
 
     uint256 private deployerPrivateKey;
 
+    address private masterMinterAddr;
+
     /**
      * @notice initialize variables from environment
      */
@@ -59,7 +61,8 @@ contract DeployFiatToken is Script, DeployImpl {
 
         impl = vm.envOr("FIAT_TOKEN_IMPLEMENTATION_ADDRESS", address(0));
         proxyAdmin = vm.envAddress("PROXY_ADMIN_ADDRESS");
-        masterMinterOwner = vm.envAddress("MASTER_MINTER_OWNER_ADDRESS");
+        // masterMinterOwner = vm.envAddress("MASTER_MINTER_OWNER_ADDRESS");
+        masterMinterAddr = vm.envAddress("MASTER_MINTER_ADDRESS");
         owner = vm.envAddress("OWNER_ADDRESS");
 
         // Pauser and blacklister addresses can default to owner address
@@ -74,7 +77,7 @@ contract DeployFiatToken is Script, DeployImpl {
         console.log("TOKEN_DECIMALS: '%s'", tokenDecimals);
         console.log("FIAT_TOKEN_IMPLEMENTATION_ADDRESS: '%s'", impl);
         console.log("PROXY_ADMIN_ADDRESS: '%s'", proxyAdmin);
-        console.log("MASTER_MINTER_OWNER_ADDRESS: '%s'", masterMinterOwner);
+        console.log("MASTER_MINTER_ADDRESS: '%s'", masterMinterAddr);
         console.log("OWNER_ADDRESS: '%s'", owner);
         console.log("PAUSER_ADDRESS: '%s'", pauser);
         console.log("BLACKLISTER_ADDRESS: '%s'", blacklister);
@@ -101,10 +104,10 @@ contract DeployFiatToken is Script, DeployImpl {
         FiatTokenProxy proxy = new FiatTokenProxy(address(fiatTokenV2_2));
 
         // Now that the proxy contract has been deployed, we can deploy the master minter.
-        MasterMinter masterMinter = new MasterMinter(address(proxy));
+        MasterMinter masterMinter = MasterMinter(masterMinterAddr);
 
         // Change the master minter to be owned by the master minter owner
-        masterMinter.transferOwnership(masterMinterOwner);
+        // masterMinter.transferOwnership(masterMinterOwner);
 
         // Now that the master minter is set up, we can go back to setting up the proxy and
         // implementation contracts.
